@@ -393,13 +393,12 @@ int luaopen_vec(lua_State *L) {
     lua_setfield(L, -2, "__index");
     luaL_setfuncs(L, vec_m, 0);
 
-    // Регистрируем функцию в глобальной таблице Lua
     luaL_newlib(L, vec);
 
-    // Возвращаем 0 для успешной загрузки библиотеки
     return 1;
 }
 
+// Для подключения в другом Си коде
 int luasetglobal_vec (lua_State *L) {
     luaopen_vec(L);
     lua_setglobal(L, "vec");
