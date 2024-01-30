@@ -397,7 +397,7 @@ int luaopen_vec(lua_State *L) {
     luaL_newlib(L, vec);
 
     // Возвращаем 0 для успешной загрузки библиотеки
-    return 0;
+    return 1;
 }
 
 int luasetglobal_vec (lua_State *L) {
