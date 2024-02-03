@@ -13,8 +13,7 @@ static int l_createtable (lua_State *L) {
 int luaopen_createtable(lua_State *L) {
 
     lua_pushcfunction(L, l_createtable);
-lua_setglobal(L, "createtable");
-    // Возвращаем 0 для успешной загрузки библиотеки
+
     return 1;
 }
 
