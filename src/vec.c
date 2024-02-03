@@ -282,13 +282,14 @@ static int lvec_pow (lua_State *L) {
 
 static int lvec_lensqr (lua_State *L) {
     double result = 0;
+    double tmp;
     luaL_checktype(L, 1, LUA_TTABLE);
     lua_Integer n = lua_rawlen(L, 1);
     
     for (lua_Integer i = 1; i <= n; i++) {
         lua_rawgeti(L, 1, i);
-
-        result += pow((double)lua_tonumber(L, -1), 2);
+        tmp = (double)lua_tonumber(L, -1);
+        result += tmp*tmp;
         lua_pop(L, 1);
     }
 
