@@ -347,7 +347,7 @@ static int lvec_lerp (lua_State *L) {
             secop = lua_tonumber(L, -1);
         } else secop = 0;
         lua_pop(L, 1);
-        lua_rawgeti(L, -1, i);
+        lua_rawgeti(L, 2, i);
 
         subres = lua_tonumber(L, -1) - secop;
         lua_pop(L, 1);
@@ -419,6 +419,7 @@ int luaopen_vec(lua_State *L) {
     lua_pushvalue(L, -1);
     lua_setfield(L, -2, "__index");
     luaL_setfuncs(L, vec_m, 0);
+    lua_pop(L, 1); // фикс для применения в клиенте
 
     luaL_newlib(L, vec);
 
