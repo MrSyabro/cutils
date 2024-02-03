@@ -345,14 +345,13 @@ static int lvec_lerp (lua_State *L) {
             secop = lua_tonumber(L, -1);
             lua_pop(L, 1);
         } else secop = 0;
-        lua_rawgeti(L, 2, i);
+        lua_rawgeti(L, -1, i);
 
         subres = lua_tonumber(L, -1) - secop;
         lua_pop(L, 1);
         lua_pushnumber(L, secop + subres * param);
-        lua_rawseti(L, 3, i);
+        lua_rawseti(L, -2, i);
     }
-    lua_settop(L, 3);
 
     return 1;
 }
