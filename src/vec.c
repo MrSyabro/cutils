@@ -323,7 +323,9 @@ static int lvec_dot (lua_State *L) {
 
 static int lvec_normalize (lua_State *L) {
     lvec_len(L);
-    return lvec_div(L);
+    lvec_div(L);
+    lua_pushvalue(L, -2);
+    return 2;
 }
 
 static int lvec_lerp (lua_State *L) {
@@ -358,13 +360,18 @@ static int lvec_lerp (lua_State *L) {
 
 static int lvec_copy (lua_State *L) {
     luaL_checktype(L, 1, LUA_TTABLE);
-    lua_Unsigned n = lua_rawlen(L, 1);
+    lua_Integer n = (lua_Integer)lua_rawlen(L, 1);
+    lua_Integer _n = n;
+    if (lua_isinteger(L, 2)) {
+        _n = lua_tointeger(L, 2);
+    }
+    n = (n < _n) ? n : _n;
 
-    lua_createtable(L, (int)n, 0);
+    lua_createtable(L, (int)_n, 0);
     luaL_getmetatable(L, "vec");    
     lua_setmetatable(L, -2);
 
-    for (lua_Unsigned i = 1; i <= n; i++) {
+    for (lua_Integer i = 1; i <= n; i++) {
         lua_rawgeti(L, 1, i);
         lua_rawseti(L, -2, i);
     }
