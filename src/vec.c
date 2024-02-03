@@ -22,11 +22,11 @@ static int lvec_newzero (lua_State *L) {
 
     lua_createtable(L, (int)n, 0);
     luaL_getmetatable(L, "vec");    
-    lua_setmetatable(L, 2);
+    lua_setmetatable(L, -2);
 
     for (lua_Integer i = 1; i <= n; i++) {
         lua_pushnumber(L, 0);
-        lua_rawseti(L, 2, i);
+        lua_rawseti(L, -2, i);
     }
 
     return 1;
@@ -37,11 +37,11 @@ static int lvec_newsingle (lua_State *L) {
 
     lua_createtable(L, (int)n, 0);
     luaL_getmetatable(L, "vec");    
-    lua_setmetatable(L, 2);
+    lua_setmetatable(L, -2);
 
     for (lua_Integer i = 1; i <= n; i++) {
         lua_pushnumber(L, 1);
-        lua_rawseti(L, 2, i);
+        lua_rawseti(L, -2, i);
     }
 
     return 1;
@@ -54,7 +54,7 @@ static int lvec_add (lua_State *L) {
 
     lua_createtable(L, (int)n, 0);
     luaL_getmetatable(L, "vec");    
-    lua_setmetatable(L, 3);
+    lua_setmetatable(L, -2);
 
     if (lua_isnumber(L, 2)) {
         lua_Number secop = lua_tonumber(L, 2);
@@ -65,7 +65,7 @@ static int lvec_add (lua_State *L) {
             lua_pop(L, 1);
 
             lua_pushnumber(L, result);
-            lua_rawseti(L, 3, i);
+            lua_rawseti(L, -2, i);
         }
     } else if (lua_istable(L, 2)) {
         for (lua_Unsigned i = 1; i <= n; i++) {
@@ -81,11 +81,9 @@ static int lvec_add (lua_State *L) {
             lua_pop(L, 1);
 
             lua_pushnumber(L, result);
-            lua_rawseti(L, 3, i);
+            lua_rawseti(L, -2, i);
         }
     }
-
-    lua_settop(L, 3);
 
     return 1;
 }
@@ -97,7 +95,7 @@ static int lvec_sub (lua_State *L) {
 
     lua_createtable(L, (int)n, 0);
     luaL_getmetatable(L, "vec");    
-    lua_setmetatable(L, 3);
+    lua_setmetatable(L, -2);
 
     if (lua_isnumber(L, 2)) {
         secop = lua_tonumber(L, 2);
@@ -108,7 +106,7 @@ static int lvec_sub (lua_State *L) {
             lua_pop(L, 1);
 
             lua_pushnumber(L, result);
-            lua_rawseti(L, 3, i);
+            lua_rawseti(L, -2, i);
         }
     } else if (lua_istable(L, 2)) {
         for (lua_Unsigned i = 1; i <= n; i++) {
@@ -124,11 +122,9 @@ static int lvec_sub (lua_State *L) {
             lua_pop(L, 1);
 
             lua_pushnumber(L, result);
-            lua_rawseti(L, 3, i);
+            lua_rawseti(L, -2, i);
         }
     }
-
-    lua_settop(L, 3);
 
     return 1;
 }
@@ -140,7 +136,7 @@ static int lvec_mul (lua_State *L) {
 
     lua_createtable(L, (int)n, 0);
     luaL_getmetatable(L, "vec");    
-    lua_setmetatable(L, 3);
+    lua_setmetatable(L, -2);
 
     if (lua_isnumber(L, 2)) {
         lua_Number secop = lua_tonumber(L, 2);
@@ -151,7 +147,7 @@ static int lvec_mul (lua_State *L) {
             lua_pop(L, 1);
 
             lua_pushnumber(L, result);
-            lua_rawseti(L, 3, i);
+            lua_rawseti(L, -2, i);
         }
     } else if (lua_istable(L, 2)) {
         for (lua_Unsigned i = 1; i <= n; i++) {
@@ -167,11 +163,9 @@ static int lvec_mul (lua_State *L) {
             lua_pop(L, 1);
 
             lua_pushnumber(L, result);
-            lua_rawseti(L, 3, i);
+            lua_rawseti(L, -2, i);
         }
     }
-
-    lua_settop(L, 3);
 
     return 1;
 }
@@ -183,7 +177,7 @@ static int lvec_div (lua_State *L) {
 
     lua_createtable(L, (int)n, 0);
     luaL_getmetatable(L, "vec");    
-    lua_setmetatable(L, 3);
+    lua_setmetatable(L, -2);
 
     if (lua_isnumber(L, 2)) {
         lua_Number secop = lua_tonumber(L, 2);
@@ -194,7 +188,7 @@ static int lvec_div (lua_State *L) {
             lua_pop(L, 1);
 
             lua_pushnumber(L, result);
-            lua_rawseti(L, 3, i);
+            lua_rawseti(L, -2, i);
         }
     } else if (lua_istable(L, 2)) {
         for (lua_Unsigned i = 1; i <= n; i++) {
@@ -210,11 +204,9 @@ static int lvec_div (lua_State *L) {
             lua_pop(L, 1);
 
             lua_pushnumber(L, result);
-            lua_rawseti(L, 3, i);
+            lua_rawseti(L, -2, i);
         }
     }
-
-    lua_settop(L, 3);
 
     return 1;
 }
@@ -225,13 +217,13 @@ static int lvec_unm (lua_State *L) {
 
     lua_createtable(L, (int)n, 0);
     luaL_getmetatable(L, "vec");    
-    lua_setmetatable(L, 2);
+    lua_setmetatable(L, -2);
 
     for (lua_Unsigned i = 1; i <= n; i++) {
         lua_rawgeti(L, 1, i);
         lua_pushnumber(L, -lua_tonumber(L, -1));
-        lua_rawseti(L, 2, i);
-        lua_settop(L, 2);
+        lua_rawseti(L, -3, i);
+        lua_pop(L, 1);
     }
 
     return 1;
@@ -244,7 +236,7 @@ static int lvec_pow (lua_State *L) {
 
     lua_createtable(L, (int)n, 0);
     luaL_getmetatable(L, "vec");    
-    lua_setmetatable(L, 3);
+    lua_setmetatable(L, -2);
 
     if (lua_isnumber(L, 2)) {
         lua_Number secop = lua_tonumber(L, 2);
@@ -255,7 +247,7 @@ static int lvec_pow (lua_State *L) {
             lua_pop(L, 1);
 
             lua_pushnumber(L, result);
-            lua_rawseti(L, 3, i);
+            lua_rawseti(L, -2, i);
         }
     } else if (lua_istable(L, 2)) {
         for (lua_Unsigned i = 1; i <= n; i++) {
@@ -271,7 +263,7 @@ static int lvec_pow (lua_State *L) {
             lua_pop(L, 1);
 
             lua_pushnumber(L, result);
-            lua_rawseti(L, 3, i);
+            lua_rawseti(L, -2, i);
         }
     }
 
@@ -345,7 +337,7 @@ static int lvec_lerp (lua_State *L) {
     lua_pop(L, 1);
     lua_createtable(L, (int)n, 0);
     luaL_getmetatable(L, "vec");    
-    lua_setmetatable(L, 3);
+    lua_setmetatable(L, -2);
 
     for (lua_Unsigned i = 1; i <= n; i++) {
         lua_rawgeti(L, 1, i);
@@ -387,6 +379,7 @@ static const struct luaL_Reg vec_m [] = {
     {"mul", lvec_mul}, {"__mul", lvec_mul},
     {"div", lvec_div}, {"__div", lvec_div},
     {"unm", lvec_unm}, {"__unm", lvec_unm},
+    {"pow", lvec_pow}, {"__pow", lvec_pow},
     {"lensqr", lvec_lensqr},
     {"len", lvec_len},
     {"lerp", lvec_lerp},
@@ -405,6 +398,7 @@ static const struct luaL_Reg vec [] = {
     {"mul", lvec_mul},
     {"div", lvec_div},
     {"unm", lvec_unm},
+    {"pow", lvec_pow},
     {"lensqr", lvec_lensqr},
     {"len", lvec_len},
     {"lerp", lvec_lerp},
