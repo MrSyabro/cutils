@@ -73,8 +73,8 @@ static int lvec_add (lua_State *L) {
 
             if (lua_isnumber(L, -1)) {
                 secop = lua_tonumber(L, -1);
-                lua_pop(L, 1);
             } else secop = 0;
+            lua_pop(L, 1);
             
             lua_rawgeti(L, 1, i);
             result = lua_tonumber(L, -1) + secop;
@@ -114,9 +114,9 @@ static int lvec_sub (lua_State *L) {
 
             if (lua_isnumber(L, -1)) {
                 secop = lua_tonumber(L, -1);
-                lua_pop(L, 1);
             } else secop = 0;
-            
+            lua_pop(L, 1);
+
             lua_rawgeti(L, 1, i);
             result = lua_tonumber(L, -1) - secop;
             lua_pop(L, 1);
@@ -155,8 +155,8 @@ static int lvec_mul (lua_State *L) {
             
             if (lua_isnumber(L, -1)) {
                 secop = lua_tonumber(L, -1);
-                lua_pop(L, 1);
             } else secop = 1;
+            lua_pop(L, 1);
             
             lua_rawgeti(L, 1, i);
             result = lua_tonumber(L, -1) * secop;
@@ -196,8 +196,8 @@ static int lvec_div (lua_State *L) {
 
             if (lua_isnumber(L, -1)) {
                 secop = lua_tonumber(L, -1);
-                lua_pop(L, 1);
             } else secop = 1;
+            lua_pop(L, 1);
             
             lua_rawgeti(L, 1, i);
             result = lua_tonumber(L, -1) / secop;
@@ -255,8 +255,8 @@ static int lvec_pow (lua_State *L) {
 
             if (lua_isnumber(L, -1)) {
                 secop = lua_tonumber(L, -1);
-                lua_pop(L, 1);
             } else secop = 1;
+            lua_pop(L, 1);
             
             lua_rawgeti(L, 1, i);
             result = pow(lua_tonumber(L, -1), secop);
@@ -309,8 +309,8 @@ static int lvec_dot (lua_State *L) {
         lua_rawgeti(L, 2, i);
         if (lua_isnumber(L, -1)) {
             secop = lua_tonumber(L, -1);
-            lua_pop(L, 1);
         } else secop = 0;
+        lua_pop(L, 1);
         lua_rawgeti(L, 1, i);
         out += lua_tonumber(L, -1) * secop;
         lua_pop(L, 1);
@@ -343,8 +343,8 @@ static int lvec_lerp (lua_State *L) {
         lua_rawgeti(L, 1, i);
         if (lua_isnumber(L, -1)) {
             secop = lua_tonumber(L, -1);
-            lua_pop(L, 1);
         } else secop = 0;
+        lua_pop(L, 1);
         lua_rawgeti(L, -1, i);
 
         subres = lua_tonumber(L, -1) - secop;
