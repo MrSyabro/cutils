@@ -371,11 +371,11 @@ static int lvec_copy (lua_State *L) {
 
     lua_createtable(L, (int)n, 0);
     luaL_getmetatable(L, "vec");    
-    lua_setmetatable(L, 2);
+    lua_setmetatable(L, -2);
 
     for (lua_Unsigned i = 1; i <= n; i++) {
         lua_rawgeti(L, 1, i);
-        lua_rawseti(L, 2, i);
+        lua_rawseti(L, -2, i);
     }
 
     return 1;
