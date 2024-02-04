@@ -270,14 +270,11 @@ static int lvec_pow (lua_State *L) {
 static int lvec_eq (lua_State *L) {
     luaL_checktype(L, 1, LUA_TTABLE);
     lua_Unsigned n = lua_rawlen(L, 1);
-    lua_Number secop;
 
     if (lua_isnumber(L, 2)) {
-        secop = lua_tonumber(L, 2);
         for (lua_Unsigned i = 1; i <= n; i++) {
             lua_rawgeti(L, 1, i);
-            
-            if (lua_tonumber(L, -1) != secop) {
+            if (lua_compare(L, -1, -2, LUA_OPEQ) == 0) {
                 lua_pushboolean(L, 0);
                 return 1;
             }
@@ -286,13 +283,8 @@ static int lvec_eq (lua_State *L) {
     } else if (lua_istable(L, 2)) {
         for (lua_Unsigned i = 1; i <= n; i++) {
             lua_rawgeti(L, 2, i);
-
-            if (lua_isnumber(L, -1)) {
-                secop = lua_tonumber(L, -1);
-            } else secop = 1;
-            
             lua_rawgeti(L, 1, i);
-            if (lua_tonumber(L, -1) != secop) {
+            if (lua_compare(L, -1, -2, LUA_OPEQ) == 0) {
                 lua_pushboolean(L, 0);
                 return 1;
             }
@@ -409,6 +401,25 @@ static int lvec_copy (lua_State *L) {
     return 1;
 }
 
+static int lvec_tostring (lua_State *L) {
+    luaL_checktype(L, 1, LUA_TTABLE);
+    lua_Integer n = (lua_Integer)lua_rawlen(L, 1);
+
+    luaL_Buffer out;
+    luaL_buffinit(L, &out);
+
+    luaL_addchar(&out, '{');
+    for (lua_Integer i = 1; i <= n; i++) {
+        lua_rawgeti(L, 1, i);
+        luaL_addvalue(&out);
+        luaL_addchar(&out, ',');
+    }
+    luaL_addchar(&out, '}');
+    luaL_pushresult(&out);
+
+    return 1;
+}
+
 static const struct luaL_Reg vec_m [] = {
     {"add", lvec_add}, {"__add", lvec_add},
     {"sub", lvec_sub}, {"__sub", lvec_sub},
@@ -417,6 +428,7 @@ static const struct luaL_Reg vec_m [] = {
     {"unm", lvec_unm}, {"__unm", lvec_unm},
     {"pow", lvec_pow}, {"__pow", lvec_pow},
     {"eq", lvec_eq}, {"__eq", lvec_eq},
+    {"__tostring", lvec_tostring},
     {"lensqr", lvec_lensqr},
     {"len", lvec_len},
     {"lerp", lvec_lerp},
@@ -443,6 +455,7 @@ static const struct luaL_Reg vec [] = {
     {"dot", lvec_dot},
     {"normalize", lvec_normalize},
     {"copy", lvec_copy},
+    {"tostring", lvec_tostring},
     {NULL, NULL} /* sentinel */
 };
 

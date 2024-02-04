@@ -24,4 +24,6 @@ assert(v1:copy("test") == {1,1,1,1})
 assert(v1:copy(2) == {1,1})
 assert(v2:copy(4) == {1,2,3})
 
+print(vec.new(1,2,3))
+
 print("OK!")
