@@ -74,11 +74,10 @@ static int lvec_add (lua_State *L) {
             if (lua_isnumber(L, -1)) {
                 secop = lua_tonumber(L, -1);
             } else secop = 0;
-            lua_pop(L, 1);
             
             lua_rawgeti(L, 1, i);
             result = lua_tonumber(L, -1) + secop;
-            lua_pop(L, 1);
+            lua_pop(L, 2);
 
             lua_pushnumber(L, result);
             lua_rawseti(L, -2, i);
@@ -115,11 +114,10 @@ static int lvec_sub (lua_State *L) {
             if (lua_isnumber(L, -1)) {
                 secop = lua_tonumber(L, -1);
             } else secop = 0;
-            lua_pop(L, 1);
 
             lua_rawgeti(L, 1, i);
             result = lua_tonumber(L, -1) - secop;
-            lua_pop(L, 1);
+            lua_pop(L, 2);
 
             lua_pushnumber(L, result);
             lua_rawseti(L, -2, i);
@@ -156,11 +154,10 @@ static int lvec_mul (lua_State *L) {
             if (lua_isnumber(L, -1)) {
                 secop = lua_tonumber(L, -1);
             } else secop = 1;
-            lua_pop(L, 1);
             
             lua_rawgeti(L, 1, i);
             result = lua_tonumber(L, -1) * secop;
-            lua_pop(L, 1);
+            lua_pop(L, 2);
 
             lua_pushnumber(L, result);
             lua_rawseti(L, -2, i);
@@ -197,11 +194,10 @@ static int lvec_div (lua_State *L) {
             if (lua_isnumber(L, -1)) {
                 secop = lua_tonumber(L, -1);
             } else secop = 1;
-            lua_pop(L, 1);
             
             lua_rawgeti(L, 1, i);
             result = lua_tonumber(L, -1) / secop;
-            lua_pop(L, 1);
+            lua_pop(L, 2);
 
             lua_pushnumber(L, result);
             lua_rawseti(L, -2, i);
@@ -256,11 +252,10 @@ static int lvec_pow (lua_State *L) {
             if (lua_isnumber(L, -1)) {
                 secop = lua_tonumber(L, -1);
             } else secop = 1;
-            lua_pop(L, 1);
             
             lua_rawgeti(L, 1, i);
             result = pow(lua_tonumber(L, -1), secop);
-            lua_pop(L, 1);
+            lua_pop(L, 2);
 
             lua_pushnumber(L, result);
             lua_rawseti(L, -2, i);
@@ -269,6 +264,43 @@ static int lvec_pow (lua_State *L) {
 
     lua_settop(L, 3);
 
+    return 1;
+}
+
+static int lvec_eq (lua_State *L) {
+    luaL_checktype(L, 1, LUA_TTABLE);
+    lua_Unsigned n = lua_rawlen(L, 1);
+    lua_Number secop;
+
+    if (lua_isnumber(L, 2)) {
+        secop = lua_tonumber(L, 2);
+        for (lua_Unsigned i = 1; i <= n; i++) {
+            lua_rawgeti(L, 1, i);
+            
+            if (lua_tonumber(L, -1) != secop) {
+                lua_pushboolean(L, 0);
+                return 1;
+            }
+            lua_pop(L, 1);
+        }
+    } else if (lua_istable(L, 2)) {
+        for (lua_Unsigned i = 1; i <= n; i++) {
+            lua_rawgeti(L, 2, i);
+
+            if (lua_isnumber(L, -1)) {
+                secop = lua_tonumber(L, -1);
+            } else secop = 1;
+            
+            lua_rawgeti(L, 1, i);
+            if (lua_tonumber(L, -1) != secop) {
+                lua_pushboolean(L, 0);
+                return 1;
+            }
+            lua_pop(L, 2);
+        }
+    }
+
+    lua_pushboolean(L, 1);
     return 1;
 }
 
@@ -310,10 +342,9 @@ static int lvec_dot (lua_State *L) {
         if (lua_isnumber(L, -1)) {
             secop = lua_tonumber(L, -1);
         } else secop = 0;
-        lua_pop(L, 1);
         lua_rawgeti(L, 1, i);
         out += lua_tonumber(L, -1) * secop;
-        lua_pop(L, 1);
+        lua_pop(L, 2);
     }
 
     lua_pushnumber(L, out);
@@ -346,11 +377,10 @@ static int lvec_lerp (lua_State *L) {
         if (lua_isnumber(L, -1)) {
             secop = lua_tonumber(L, -1);
         } else secop = 0;
-        lua_pop(L, 1);
         lua_rawgeti(L, 2, i);
 
         subres = lua_tonumber(L, -1) - secop;
-        lua_pop(L, 1);
+        lua_pop(L, 2);
         lua_pushnumber(L, secop + subres * param);
         lua_rawseti(L, -2, i);
     }
@@ -386,6 +416,7 @@ static const struct luaL_Reg vec_m [] = {
     {"div", lvec_div}, {"__div", lvec_div},
     {"unm", lvec_unm}, {"__unm", lvec_unm},
     {"pow", lvec_pow}, {"__pow", lvec_pow},
+    {"eq", lvec_eq}, {"__eq", lvec_eq},
     {"lensqr", lvec_lensqr},
     {"len", lvec_len},
     {"lerp", lvec_lerp},
@@ -405,6 +436,7 @@ static const struct luaL_Reg vec [] = {
     {"div", lvec_div},
     {"unm", lvec_unm},
     {"pow", lvec_pow},
+    {"eq", lvec_eq},
     {"lensqr", lvec_lensqr},
     {"len", lvec_len},
     {"lerp", lvec_lerp},
