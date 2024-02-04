@@ -294,7 +294,7 @@ static int lvec_len (lua_State *L) {
     lvec_lensqr(L);
     double result = lua_tonumber(L, -1);
     lua_settop(L, 1);
-    lua_pushnumber(L, pow(result, 0.5));
+    lua_pushnumber(L, sqrt(result));
     return 1;
 }
 
