@@ -408,6 +408,28 @@ static int lvec_tostring (lua_State *L) {
     luaL_Buffer out;
     luaL_buffinit(L, &out);
 
+    luaL_addchar(&out, '[');
+    for (lua_Integer i = 1; i <= n; i++) {
+        lua_rawgeti(L, 1, i);
+        luaL_addvalue(&out);
+        if (i < n) {
+            luaL_addchar(&out, ',');
+            luaL_addchar(&out, ' ');
+        }
+    }
+    luaL_addchar(&out, ']');
+    luaL_pushresult(&out);
+
+    return 1;
+}
+
+static int lvec_serialize (lua_State *L) {
+    luaL_checktype(L, 1, LUA_TTABLE);
+    lua_Integer n = (lua_Integer)lua_rawlen(L, 1);
+
+    luaL_Buffer out;
+    luaL_buffinit(L, &out);
+
     luaL_addchar(&out, '{');
     for (lua_Integer i = 1; i <= n; i++) {
         lua_rawgeti(L, 1, i);
@@ -429,6 +451,7 @@ static const struct luaL_Reg vec_m [] = {
     {"pow", lvec_pow}, {"__pow", lvec_pow},
     {"eq", lvec_eq}, {"__eq", lvec_eq},
     {"__tostring", lvec_tostring},
+    {"__serialize", lvec_serialize},
     {"lensqr", lvec_lensqr},
     {"len", lvec_len},
     {"lerp", lvec_lerp},
