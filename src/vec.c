@@ -482,6 +482,9 @@ static const struct luaL_Reg vec [] = {
     {NULL, NULL} /* sentinel */
 };
 
+#if defined(_WIN32) || defined(_WIN64)
+__declspec(dllexport)
+#endif
 int luaopen_vec(lua_State *L) {
     luaL_newmetatable(L, "vec");
     lua_pushvalue(L, -1);
