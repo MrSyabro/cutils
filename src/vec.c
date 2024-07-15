@@ -423,6 +423,12 @@ static int lvec_tostring (lua_State *L) {
     return 1;
 }
 
+static unsigned char hexclamp(lua_Number num) {
+    if (num > 255) return 255U;
+    if (num < 0) return 0U;
+    return (unsigned char)num;
+}
+
 static char* fmt = "%02X";
 static int lvec_tohex (lua_State *L) {
     luaL_checktype(L, 1, LUA_TTABLE);
@@ -436,7 +442,7 @@ static int lvec_tohex (lua_State *L) {
     luaL_addchar(&out, '#');
     for (lua_Integer i = 1; i <= n; i++) {
         lua_rawgeti(L, 1, i);
-        num = (unsigned char)lua_tointeger(L, -1);
+        num = hexclamp(lua_tonumber(L, -1));
         sprintf(numstr, fmt, num);
         luaL_addstring(&out, numstr);
     }
