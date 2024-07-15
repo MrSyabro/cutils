@@ -423,6 +423,28 @@ static int lvec_tostring (lua_State *L) {
     return 1;
 }
 
+static char* fmt = "%02X";
+static int lvec_tohex (lua_State *L) {
+    luaL_checktype(L, 1, LUA_TTABLE);
+    lua_Integer n = (lua_Integer)lua_rawlen(L, 1);
+
+    unsigned char num;
+    char numstr[3];
+    luaL_Buffer out;
+    luaL_buffinit(L, &out);
+
+    luaL_addchar(&out, '#');
+    for (lua_Integer i = 1; i <= n; i++) {
+        lua_rawgeti(L, 1, i);
+        num = (unsigned char)lua_tointeger(L, -1);
+        sprintf(numstr, fmt, num);
+        luaL_addstring(&out, numstr);
+    }
+    luaL_pushresult(&out);
+
+    return 1;
+}
+
 static int lvec_serialize (lua_State *L) {
     luaL_checktype(L, 1, LUA_TTABLE);
     lua_Integer n = (lua_Integer)lua_rawlen(L, 1);
@@ -452,6 +474,7 @@ static const struct luaL_Reg vec_m [] = {
     {"eq", lvec_eq}, {"__eq", lvec_eq},
     {"__tostring", lvec_tostring},
     {"__serialize", lvec_serialize},
+    {"tohex", lvec_tohex},
     {"lensqr", lvec_lensqr},
     {"len", lvec_len},
     {"lerp", lvec_lerp},
@@ -479,6 +502,7 @@ static const struct luaL_Reg vec [] = {
     {"normalize", lvec_normalize},
     {"copy", lvec_copy},
     {"tostring", lvec_tostring},
+    {"tohex", lvec_tohex},
     {NULL, NULL} /* sentinel */
 };
 
